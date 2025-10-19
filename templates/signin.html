@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GlobeIn Sign In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+     * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+       body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url("static/images/eba8f2d13c32c02459fa8abb482bc70d.jpg") no-repeat center center fixed;
+  background-size: cover;
+  color: #ffffff;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.55);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Navbar stays on top */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b35, #f39c12, #ff6b35);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+/* Wrapper to center login container below navbar */
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding-top: 80px; /* height of navbar + some space */
+}
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff6b35, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 25px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-links a:hover::before {
+            left: 100%;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 107, 53, 0.2);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+            border-color: rgba(255, 107, 53, 0.4);
+        }
+
+    .login-container {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(25px);
+      backdrop-filter: blur(25px);
+      padding: 60px 60px;
+      border-radius: 30px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+      width: 480px;
+      max-width: 90%; 
+      color: white;
+      text-align: center;
+      animation: fadeIn 0.6s ease-in-out;
+      border: 1px solid rgba(255, 107, 53, 0.2);
+      overflow: hidden;
+    }
+
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ff6b35, #f39c12);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.6s ease;
+    }
+
+    .login-container:hover::before {
+      transform: scaleX(1);
+    }
+
+    .login-container::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 107, 53, 0.05) 0%, transparent 70%);
+      animation: pulse 5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .login-container h2 {
+      font-family: 'Roboto Slab', serif;
+      background: linear-gradient(45deg, #FF7A00, #ffbb33);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 2.8rem;
+      margin-bottom: 30px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 18px 22px;
+      border-radius: 15px;
+      font-size: 16px;     
+      border: 2px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      outline: none;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+
+    .form-group input:focus {
+      border-color: #FF7A00;
+      background: rgba(255,255,255,0.15);
+      transform: scale(1.02);
+      box-shadow: 0 0 25px rgba(255, 122, 0, 0.4);
+    }
+
+    .form-group input:valid {
+      border-color: rgba(76, 175, 80, 0.6);
+    }
+
+    .form-group label {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      pointer-events: none;
+      transition: 0.3s ease all;
+    }
+
+    input:focus + label,
+    input:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 10px;
+      font-size: 12px;
+      background: rgba(34,32,32,0.6);
+      padding: 0 5px;
+      color: #FF7A00;
+    }
+
+    button {
+      padding: 20px; 
+      width: 100%;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #FF7A00, #ffbb33);
+      color: black;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(255, 122, 0, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s ease;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: scale(1.05) translateY(-3px);
+      opacity: 0.9;
+      box-shadow: 0 12px 35px rgba(255, 122, 0, 0.5);
+    }
+
+    button:active {
+      transform: scale(0.98) translateY(0);
+    }
+
+    .signup-link {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .signup-link a {
+      color: #FF7A00;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .slide-out {
+  animation: slideOut 0.5s forwards;
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+/* Floating elements for signin page */
+.floating-element {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 107, 53, 0.4);
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  33% { transform: translateY(-15px) rotate(120deg) scale(1.2); }
+  66% { transform: translateY(8px) rotate(240deg) scale(0.8); }
+}
+
+.floating-element:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+.floating-element:nth-child(2) { top: 60%; left: 20%; animation-delay: 2s; }
+.floating-element:nth-child(3) { top: 30%; right: 15%; animation-delay: 4s; }
+.floating-element:nth-child(4) { bottom: 40%; right: 25%; animation-delay: 1s; }
+.floating-element:nth-child(5) { bottom: 20%; left: 30%; animation-delay: 3s; }
+
+/* Flash Messages */
+.flash-messages {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    max-width: 500px;
+}
+
+.flash-message {
+    color: white;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 10px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    animation: slideInDown 0.5s ease-out;
+}
+
+.flash-error {
+    background: rgba(255, 85, 85, 0.9);
+}
+
+.flash-success {
+    background: rgba(76, 175, 80, 0.9);
+}
+
+.flash-info {
+    background: rgba(33, 150, 243, 0.9);
+}
+
+@keyframes slideInDown {
+    from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+  </style>
+</head>
+<body>
+  <!-- Floating Elements -->
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+
+  <!-- Navbar at top -->
+  <header class="header">
+    <div class="logo">GlobeIn</div>
+    <nav class="nav-links">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('signin') }}">Login</a>
+    </nav>
+  </header>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash-message flash-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Wrapper for login form -->
+  <div class="login-wrapper">
+    <div class="login-container">
+      <h2>Sign In to GlobeIn</h2>
+      <form action="/signin" method="POST">
+        <div class="form-group">
+          <input type="email" id="email" name="email" placeholder=" " required>
+          <label for="email">Email</label>
+        </div>
+        <div class="form-group">
+          <input type="password" id="password" name="password" placeholder=" " required>
+          <label for="password">Password</label>
+        </div>
+        <button type="submit">Sign In</button>
+      </form>
+      <div class="signup-link">
+        Don't have an account? <a href="/signup">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  const form = document.querySelector('form');
+  const container = document.querySelector('.login-container');
+
+  // Add input focus effects
+  const inputs = document.querySelectorAll('input');
+  inputs.forEach(input => {
+    input.addEventListener('focus', function() {
+      this.parentElement.style.transform = 'scale(1.02)';
+    });
+    
+    input.addEventListener('blur', function() {
+      this.parentElement.style.transform = 'scale(1)';
+    });
+  });
+
+  // Add form validation feedback
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Add loading state to button
+    const button = form.querySelector('button');
+    const originalText = button.textContent;
+    button.textContent = 'Signing In...';
+    button.style.opacity = '0.7';
+    
+    container.classList.add('slide-out');
+    
+    setTimeout(() => {
+      form.submit();
+    }, 500);
+  });
+
+  // Add parallax effect to floating elements
+  window.addEventListener('mousemove', function(e) {
+    const floatingElements = document.querySelectorAll('.floating-element');
+    const mouseX = e.clientX / window.innerWidth;
+    const mouseY = e.clientY / window.innerHeight;
+
+    floatingElements.forEach((element, index) => {
+      const speed = (index + 1) * 0.3;
+      const x = (mouseX - 0.5) * speed * 5;
+      const y = (mouseY - 0.5) * speed * 5;
+      element.style.transform += ` translate(${x}px, ${y}px)`;
+    });
+  });
+</script>
+</html>

@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <title>GlobeIn - Premium MSME Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url("static/images/eba8f2d13c32c02459fa8abb482bc70d.jpg") no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+       body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.55); 
+    pointer-events: none;
+    z-index: 0;
+}
+
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b35;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 107, 53, 0.2);
+            transform: translateY(-2px);
+        }
+
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+            z-index: 5;
+        }
+
+    
+        .hero-section {
+            text-align: center;
+            padding: 80px 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: #ecf0f1;
+            margin-bottom: 40px;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #ff6b35 0%, #f39c12 100%);
+            color: #ffffff;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        
+        .card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 30px;
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b35, #f39c12);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 107, 53, 0.3);
+        }
+
+        
+        .features-card {
+            height: fit-content;
+            padding-bottom:226px;
+        }
+
+        .features-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #ff6b35;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 107, 53, 0.2);
+            transform: translateX(5px);
+        }
+
+        .feature-item.highlight {
+            background: linear-gradient(135deg, #ff6b35, #f39c12);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        
+        .news-section {
+            height: fit-content;
+        }
+
+        .news-item {
+            padding: 25px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border-left: 4px solid #ff6b35;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            padding-bottom:54px;
+        }
+
+        .news-item:hover {
+            background: rgba(255, 107, 53, 0.1);
+            transform: translateX(5px);
+        }
+
+        .news-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .news-content {
+            color: #ecf0f1;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+       .globein-stats-card {
+  background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 25px 30px;
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  text-align: center;
+}
+
+.stats-heading {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffb347;
+  margin-bottom: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.stat-box {
+  background: rgba(255,255,255,0.08);
+  border-radius: 15px;
+  padding: 15px 10px;
+  transition: transform 0.3s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #00d4ff;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.growth-summary {
+  margin-top: 25px;
+  text-align: left;
+}
+
+.growth-title {
+  font-size: 1rem;
+  color: #ffb347;
+  margin-bottom: 8px;
+}
+
+.growth-bar {
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.growth-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #ffb347);
+  border-radius: 10px;
+}
+
+.growth-progress-42 {
+  width: 42%;
+}
+
+.growth-note {
+  font-size: 0.85rem;
+  margin-top: 8px;
+  opacity: 0.8;
+}
+
+        @supports not (backdrop-filter: blur(10px)) {
+            .header, .nav-links a, .hero-section, .card, .globein-stats-card {
+                background: rgba(0, 0, 0, 0.7) !important;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .hero-section {
+                padding: 50px 20px;
+            }
+
+            .hero-title {
+                font-size: 28px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+            }
+        }
+
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-10px) rotate(120deg); }
+            66% { transform: translateY(5px) rotate(240deg); }
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 107, 53, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { top: 60%; left: 20%; animation-delay: 2s; }
+        .floating-element:nth-child(3) { top: 30%; right: 15%; animation-delay: 4s; }
+        .floating-element:nth-child(4) { bottom: 40%; right: 25%; animation-delay: 1s; }
+        .floating-element:nth-child(5) { bottom: 20%; left: 30%; animation-delay: 3s; }
+
+
+ 
+        
+    </style>
+</head>
+<body>
+    
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+
+    
+    <header class="header">
+        <div class="logo">GlobeIn</div>
+        <nav class="nav-links">
+            <a href="#home">Home</a>
+            <a href="/signin">Sign In</a>
+            <a href="/signup">Sign Up</a>
+            <a href="#features">Features</a>
+        </nav>
+    </header>
+
+    
+    <div class="container">
+        
+        <section class="hero-section">
+            <h1 class="hero-title">Welcome to GlobeIn</h1>
+            <p class="hero-subtitle">Connecting MSME's globally!</p>
+           <a href="{{ url_for('signup') }}" class="cta-button">Join Now</a>
+        </section>
+
+        
+        <div class="content-grid">
+            
+            <div class="card features-card">
+                <h3 class="features-title">What We Do</h3>
+                <div class="feature-item highlight">
+                    Connect with global suppliers and buyers
+                </div>
+                <div class="feature-item">
+                    Access MSME news and insights
+                </div>
+                <div class="feature-item">
+                    AI-driven recommendations
+                </div>
+                <div class="feature-item">
+                   Growth & trade opportunities 
+                </div>
+                <div class="feature-item">
+                    Analytics & Insights
+                </div>
+
+            </div>
+
+            
+            <div class="card news-section">
+                <div class="news-item">
+                    <div class="news-title">About Globein</div>
+                    <div class="news-content">
+                       The Global Company News Aggregator App acts as a personal market intelligence assistant
+for MSMEs. It collects, organizes, and summarizes company-specific and industry-wide news
+from across the world into one simple app.
+
+                    </div>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-title">Target Audience</div>
+                    <div class="news-content">
+                        This app targets small and medium enterprises that need market awareness but lack
+research resources
+                    </div>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-title">Marketing Strategy:</div>
+                    <div class="news-content">
+                        
+• Collaborate with MSME associations, export promotion councils, and startup
+incubators.
+<br>
+• Freemium model to attract mass adoption, with premium plans for deeper analytics.
+<br>
+• Use case studies showing how real MSMEs improved decision-making and sales with
+the app
+                    </div>
+                </div>
+            </div>
+
+            
+<div class="card globein-stats-card">
+  <h3 class="stats-heading">GlobeIn in Numbers</h3>
+
+  <div class="stats-grid">
+    <div class="stat-box">
+      <h4 class="stat-number" data-target="50">0</h4>
+      <p class="stat-label">Registered Companies</p>
+    </div>
+
+    <div class="stat-box">
+      <h4 class="stat-number" data-target="120">0</h4>
+      <p class="stat-label">Active Buyers</p>
+    </div>
+
+    <div class="stat-box">
+      <h4 class="stat-number" data-target="15">0</h4>
+      <p class="stat-label">Industry Sectors</p>
+    </div>
+
+    <div class="stat-box">
+      <h4 class="stat-number" data-target="29">0</h4>
+      <p class="stat-label">States Connected</p>
+    </div>
+  </div>
+
+  <div class="growth-summary">
+    <h4 class="growth-title">Platform Growth</h4>
+    <div class="growth-bar">
+      <div class="growth-progress growth-progress-42"></div>
+    </div>
+    <p class="growth-note">+42% growth since last month 🚀</p>
+  </div>
+</div>
+
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function() {
+        
+            const newsItems = document.querySelectorAll('.news-item');
+            newsItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(10px) scale(1.02)';
+                });
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0) scale(1)';
+                });
+            });
+
+            
+          const counters = document.querySelectorAll('.stat-number');
+  const speed = 60; 
+
+  counters.forEach(counter => {
+    const updateCount = () => {
+      const target = +counter.getAttribute('data-target');
+      const count = +counter.innerText;
+      const increment = target / speed;
+
+      if (count < target) {
+        counter.innerText = Math.ceil(count + increment);
+        setTimeout(updateCount, 30);
+      } else {
+        counter.innerText = target;
+      }
+    };
+    updateCount();
+  });
+            
+           ctaButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    this.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        window.location.href = this.href;
+    }, 200);
+});
+        });
+    </script>
+</body>
+</html>

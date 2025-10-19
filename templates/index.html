@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSME Analytics Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url("static/images/eba8f2d13c32c02459fa8abb482bc70d.jpg") no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.55); 
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b35;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 107, 53, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .logout-btn {
+            margin-left: auto;
+            background: rgba(255, 85, 85, 0.2) !important;
+            border: 1px solid rgba(255, 85, 85, 0.3);
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 85, 85, 0.4) !important;
+            border-color: rgba(255, 85, 85, 0.5);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 30px 25px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: #ecf0f1;
+            margin-bottom: 30px;
+            font-weight: 300;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #ff6b35 0%, #f39c12 100%);
+            color: #ffffff;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Dashboard Section */
+        .dashboard-section {
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            border-radius: 16px;
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .filter-input, .filter-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+        }
+
+        .filter-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .filter-select option {
+            background: rgba(30, 30, 30, 0.95);
+            color: #ffffff;
+            padding: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35 0%, #f39c12 100%);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: #ffffff;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: #ffffff;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-outline-primary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-outline-primary:hover {
+            background: rgba(255, 107, 53, 0.2);
+            border-color: #ff6b35;
+        }
+
+        /* Company Cards */
+        .company-list-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 14px;
+            padding: 20px;
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .company-list-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b35, #f39c12);
+        }
+
+        .company-list-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 107, 53, 0.3);
+        }
+
+        .company-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .company-info {
+            margin: 15px 0;
+            color: #ecf0f1;
+        }
+
+        .info-item {
+            margin: 8px 0;
+            padding: 4px 0;
+            color: #ecf0f1;
+        }
+
+        .info-item strong {
+            color: #bdc3c7;
+            margin-right: 8px;
+        }
+
+        .text-muted {
+            color: #bdc3c7 !important;
+            font-size: 14px;
+        }
+
+        .text-muted strong {
+            color: #bdc3c7;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-primary {
+            background: linear-gradient(135deg, #ff6b35 0%, #f39c12 100%);
+            color: #495057;
+        }
+
+        .badge-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff50;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: #ffffff;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: #ffffff;
+        }
+
+        .badge-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: #ffffff;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ff6b35;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-info {
+            background: rgba(52, 152, 219, 0.2);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            color: #3498db;
+        }
+
+        .status-success {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            color: #2ecc71;
+        }
+
+        .status-warning {
+            background: rgba(243, 156, 18, 0.2);
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            color: #f39c12;
+        }
+
+        .status-danger {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1400px) {
+            .container {
+                max-width: 1200px;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .filter-row {
+            flex-direction: column;
+        }
+
+            .filter-box {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .hero-section {
+                padding: 40px 20px;
+            }
+
+            .hero-title {
+                font-size: 28px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+            }
+
+            .action-buttons {
+            flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 24px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+        }
+
+        /* Floating Elements */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-10px) rotate(120deg); }
+            66% { transform: translateY(5px) rotate(240deg); }
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 107, 53, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { top: 60%; left: 20%; animation-delay: 2s; }
+        .floating-element:nth-child(3) { top: 30%; right: 15%; animation-delay: 4s; }
+        .floating-element:nth-child(4) { bottom: 40%; right: 25%; animation-delay: 1s; }
+        .floating-element:nth-child(5) { bottom: 20%; left: 30%; animation-delay: 3s; }
+        .news-card .card-title {
+            font-size: 0.9rem !important;
+            line-height: 1.2 !important;
+            margin-bottom: 0.5rem !important;
+            max-height: 2.4rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .news-card .card-text {
+            flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            margin-bottom: 0.5rem;
+            max-height: 3.6rem;
+        }
+        .news-card .card-footer {
+            margin-top: auto;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border-top: none;
+        }
+        .similarity-score {
+            background-color: #28a745;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+        .info-item strong {
+            color: #495057;
+            margin-right: 8px;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Elements -->
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-chart-bar"></i> MSME Analytics Dashboard
+            </div>
+        <nav class="nav-links">
+            <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+            <a href="/marketplace"><i class="fas fa-building"></i> Companies</a>
+            <a href="/dashboard"><i class="fas fa-chart-bar"></i> Analytics</a>
+            <a href="/news"><i class="fas fa-newspaper"></i> News</a>
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+    </header>
+
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">MSME Analytics Dashboard</h1>
+            <p class="hero-subtitle">Comprehensive financial analytics and insights for Micro, Small & Medium Enterprises</p>
+            <button class="cta-button" onclick="loadDashboardData()">
+                <i class="fas fa-rocket"></i> Get Started
+                                </button>
+        </section>
+
+        <!-- Dashboard Filters -->
+        <section class="dashboard-section">
+            <h2 class="section-title">
+                <i class="fas fa-filter"></i> Company Filters
+            </h2>
+            <div class="filter-row">
+                <div class="filter-box">
+                    <select class="filter-select" id="locationFilter" title="Location Filter" onchange="applyFilters()">
+                        <option value="">All Locations</option>
+                    </select>
+                            </div>
+                <div class="filter-box">
+                    <select class="filter-select" id="sectorFilter" title="Sector Filter" onchange="applyFilters()">
+                        <option value="">All Sectors</option>
+                    </select>
+                            </div>
+                <div class="filter-box">
+                    <select class="filter-select" id="exportFilter" title="Export Market Filter" onchange="applyFilters()">
+                        <option value="">All Export Markets</option>
+                    </select>
+                            </div>
+                <div class="filter-box">
+                    <input type="text" class="filter-input" id="searchInput" placeholder="Search companies..." onkeyup="applyFilters()">
+                            </div>
+                        </div>
+            <div class="filter-row">
+                <div class="filter-box">
+                    <label style="color: #f39c12; font-weight: 600; margin-bottom: 8px; display: block;">Performance Score Range:</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="range" style="flex: 1;" id="performanceRange" title="Performance Score Range" min="0" max="100" value="0" onchange="updatePerformanceLabel()">
+                        <span id="performanceLabel" style="color: #ffffff; font-weight: 600;">0-100</span>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="loadDashboardData()">
+                        <i class="fas fa-refresh"></i> Refresh Data
+                    </button>
+                    <button class="btn btn-success" onclick="showAddCompanyModal()">
+                        <i class="fas fa-plus"></i> Add New Company
+                    </button>
+            </div>
+        </div>
+        </section>
+
+        <!-- Companies Section -->
+        <section class="dashboard-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 class="section-title">
+                    <i class="fas fa-building"></i> MSME Companies
+                </h2>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="/news" class="btn btn-outline-primary">
+                        <i class="fas fa-newspaper"></i> View All News
+                    </a>
+                    <span id="companyCount" class="badge badge-primary">0 companies</span>
+                    </div>
+                            </div>
+            <div id="companyCards">
+                <div style="text-align: center; padding: 60px 20px; color: #ecf0f1;">
+                    <i class="fas fa-building" style="font-size: 48px; color: #ff6b35; margin-bottom: 20px;"></i>
+                    <h3 style="color: #ff6b35; margin-bottom: 10px;">No Companies Loaded</h3>
+                    <p>Click "Refresh Data" to load companies</p>
+                        </div>
+                        </div>
+        </section>
+
+
+        <!-- Financial Analytics Dashboard -->
+        <section class="dashboard-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar"></i> Financial Analytics Dashboard
+                </h2>
+                <button class="btn btn-info" onclick="generateDashboard()">
+                    <i class="fas fa-chart-line"></i> Generate Dashboard
+                        </button>
+                    </div>
+             <!-- Charts Placeholder -->
+             <div style="text-align: center; padding: 60px 20px;">
+                 <h3 style="color: #ff6b35; font-weight: bold; font-size: 24px;">
+                     WILL BE DEVELOPED IN THE LATER STAGES
+                 </h3>
+             </div>
+        </section>
+    </div>
+
+    <!-- Status Message -->
+    <div id="statusMessage" class="status-message" style="display: none;">
+        <i class="fas fa-info-circle"></i>
+        <span id="statusText"></span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let lastDashboardData = null;
+
+        // Utility functions
+        function showStatus(message, type = 'info') {
+            const statusMessage = document.getElementById('statusMessage');
+            const statusText = document.getElementById('statusText');
+            
+            if (statusMessage && statusText) {
+                statusText.textContent = message;
+                statusMessage.className = `status-message status-${type}`;
+                statusMessage.style.display = 'flex';
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Load MSME data
+        async function loadData() {
+            showStatus('Loading MSME data...', 'info');
+            try {
+                const response = await fetch('/api/load-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    showStatus(result.message, 'success');
+                } else {
+                    showStatus(`Error: ${result.error}`, 'danger');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'danger');
+            }
+        }
+
+        // Fetch news
+        async function fetchNews() {
+            showStatus('Fetching latest news...', 'info');
+            try {
+                const response = await fetch('/api/fetch-news', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: 'MSME small business manufacturing technology',
+                        country: 'in'
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    showStatus(`Successfully fetched ${result.articles_stored} articles`, 'success');
+                    
+                    // Fetch and display the latest news articles
+                    await displayLatestNews();
+                } else {
+                    showStatus(`Error: ${result.error}`, 'danger');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'danger');
+            }
+        }
+
+        // Display latest news articles
+        async function displayLatestNews() {
+            try {
+                const response = await fetch('/api/latest-news', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                if (result.success && result.articles && result.articles.length > 0) {
+                    displayNews(result.articles);
+                } else {
+                    // If no articles, show message
+                    const newsResults = document.getElementById('newsResults');
+                    newsResults.innerHTML = '<div class="col-12 text-center text-muted"><p>No news articles found. Try using the chatbot to search for specific topics.</p></div>';
+                }
+            } catch (error) {
+                console.error('Error displaying latest news:', error);
+                const newsResults = document.getElementById('newsResults');
+                newsResults.innerHTML = '<div class="col-12 text-center text-muted"><p>Error loading news articles.</p></div>';
+            }
+        }
+
+        // Dashboard Functions
+        let allCompanies = [];
+        let filteredCompanies = [];
+        let selectedCompany = null;
+        let currentNewsType = 'all';
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            showStatus('Loading dashboard data...', 'info');
+            try {
+                // Load companies
+                await loadCompanies();
+                // Load filter options
+                await loadFilterOptions();
+                showStatus('Dashboard data loaded successfully', 'success');
+            } catch (error) {
+                showStatus(`Error loading dashboard: ${error.message}`, 'danger');
+            }
+        }
+
+         // Load companies from API
+         async function loadCompanies() {
+             try {
+                 const response = await fetch('/api/dashboard/companies');
+                 const result = await response.json();
+                 
+                 console.log('Companies API response:', result);
+                 
+                 if (result.success) {
+                     allCompanies = result.companies;
+                     filteredCompanies = [...allCompanies];
+                     console.log('Loaded companies:', allCompanies.length);
+                     console.log('First company:', allCompanies[0]);
+                     displayCompanyCards();
+                     updateCompanyCount();
+                 } else {
+                     showStatus(`Error loading companies: ${result.error}`, 'danger');
+                 }
+             } catch (error) {
+                 console.error('Error loading companies:', error);
+                 showStatus(`Error loading companies: ${error.message}`, 'danger');
+             }
+         }
+
+        // Load filter options
+        async function loadFilterOptions() {
+            try {
+                const response = await fetch('/api/dashboard/filters');
+                const result = await response.json();
+                
+                if (result.success) {
+                    populateFilter('locationFilter', result.filters.locations);
+                    populateFilter('sectorFilter', result.filters.sectors);
+                    populateFilter('exportFilter', result.filters.export_markets);
+                }
+            } catch (error) {
+                console.error('Error loading filter options:', error);
+            }
+        }
+
+        // Populate filter dropdown
+        function populateFilter(filterId, options) {
+            const select = document.getElementById(filterId);
+            // Clear existing options except first
+            while (select.children.length > 1) {
+                select.removeChild(select.lastChild);
+            }
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                select.appendChild(optionElement);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const location = document.getElementById('locationFilter').value;
+            const sector = document.getElementById('sectorFilter').value;
+            const exportMarket = document.getElementById('exportFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const performanceScore = parseInt(document.getElementById('performanceRange').value);
+
+            console.log('Applying filters:', { location, sector, exportMarket, searchTerm, performanceScore });
+            console.log('All companies before filter:', allCompanies.length);
+
+            filteredCompanies = allCompanies.filter(company => {
+                const matchesLocation = !location || company.Location?.toLowerCase().includes(location.toLowerCase());
+                const matchesSector = !sector || company.Sector?.toLowerCase().includes(sector.toLowerCase());
+                const matchesExport = !exportMarket || company.Export_Markets?.toLowerCase().includes(exportMarket.toLowerCase());
+                const matchesSearch = !searchTerm || 
+                    company.Company_Name?.toLowerCase().includes(searchTerm) ||
+                    company.Sector?.toLowerCase().includes(searchTerm) ||
+                    company.Primary_Products?.toLowerCase().includes(searchTerm);
+                
+                // Convert performance score to number for comparison
+                // Since companies don't have Overall_Performance_Score, we'll use a simple scoring system
+                const companyScore = getCompanyPerformanceScore(company);
+                const matchesPerformance = companyScore >= performanceScore;
+
+                return matchesLocation && matchesSector && matchesExport && matchesSearch && matchesPerformance;
+            });
+
+            console.log('Filtered companies after filter:', filteredCompanies.length);
+            displayCompanyCards();
+            updateCompanyCount();
+        }
+
+        // Convert performance score text to number
+        function getPerformanceScoreNumber(score) {
+            const scoreMap = {
+                'Strong': 80,
+                'Good': 60,
+                'Medium': 40,
+                'Developing': 20,
+                'Weak': 0
+            };
+            return scoreMap[score] || 0;
+        }
+
+        // Calculate company performance score based on available data
+        function getCompanyPerformanceScore(company) {
+            try {
+                let score = 50; // Base score
+                
+                // Increase score based on export markets
+                if (company.Export_Markets && typeof company.Export_Markets === 'string' && company.Export_Markets !== 'Limited Export Activity') {
+                    const exportCount = company.Export_Markets.split(',').length;
+                    if (!isNaN(exportCount)) {
+                        score += Math.min(exportCount * 10, 30);
+                    }
+                }
+                
+                // Increase score based on growth drivers
+                if (company.Growth_Drivers && typeof company.Growth_Drivers === 'string') {
+                    const growthKeywords = ['growth', 'expansion', 'development', 'market', 'demand'];
+                    const growthText = company.Growth_Drivers.toLowerCase();
+                    const keywordCount = growthKeywords.filter(keyword => growthText.includes(keyword)).length;
+                    if (!isNaN(keywordCount)) {
+                        score += Math.min(keywordCount * 5, 20);
+                    }
+                }
+                
+                // Ensure we return a valid number
+                const finalScore = Math.min(score, 100);
+                return isNaN(finalScore) ? 50 : Math.round(finalScore);
+            } catch (error) {
+                console.error('Error calculating performance score:', error);
+                return 50; // Default score
+            }
+        }
+
+        // Update performance label
+        function updatePerformanceLabel() {
+            const range = document.getElementById('performanceRange');
+            const label = document.getElementById('performanceLabel');
+            label.textContent = `${range.value}-100`;
+            applyFilters();
+        }
+
+        // Display company cards
+        function displayCompanyCards() {
+            const container = document.getElementById('companyCards');
+            
+            console.log('Displaying company cards. Total companies:', filteredCompanies.length);
+            console.log('First few companies:', filteredCompanies.slice(0, 3));
+            
+            if (filteredCompanies.length === 0) {
+                container.innerHTML = '<div class="col-12 text-center text-muted"><p>No companies match the current filters</p></div>';
+                return;
+            }
+
+             const cardsHTML = filteredCompanies.map(company => {
+                 try {
+                     const performanceScore = getCompanyPerformanceScore(company);
+                     const badgeClass = getPerformanceBadgeClass(performanceScore);
+                     
+                     return `
+                 <div class="company-list-item" onclick="selectCompany('${company.Company_Name}')">
+                     <div class="d-flex justify-content-between align-items-start mb-2">
+                         <div class="flex-grow-1">
+                             <div class="d-flex align-items-center mb-2">
+                                 <h6 class="company-title mb-0 me-3">${company.Company_Name}</h6>
+                                 <span class="badge bg-${badgeClass} me-2">${performanceScore}</span>
+                                 <span class="badge bg-secondary">${company.Sector || 'N/A'}</span>
+                             </div>
+                             <div class="company-info">
+                                 <div class="info-item">
+                                     <strong>Location:</strong> ${company.Location || 'N/A'}
+                                 </div>
+                                 <div class="info-item">
+                                     <strong>Export Markets:</strong> ${company.Export_Markets || 'N/A'}
+                                 </div>
+                                 <div class="info-item">
+                                     <strong>Founded:</strong> ${company.Founded_Year || 'N/A'}
+                                 </div>
+                                 <div class="info-item">
+                                     <strong>Employees:</strong> ${company.Employee_Count || 'N/A'}
+                                 </div>
+                                 <div class="info-item">
+                                     <strong>Website:</strong> ${company.Website || 'N/A'}
+                                 </div>
+                                 <div class="info-item">
+                                     <strong>Email:</strong> ${company.Email || 'N/A'}
+                                 </div>
+                                 <div class="info-item">
+                                     <strong>Phone:</strong> ${company.Phone || 'N/A'}
+                                 </div>
+                             </div>
+                             <div class="mt-2">
+                                 <small class="text-muted">
+                                     <strong>Products:</strong> ${company.Primary_Products ? company.Primary_Products.substring(0, 200) + '...' : 'N/A'}
+                                 </small>
+                             </div>
+                             <div class="mt-2">
+                                 <small class="text-muted">
+                                     <strong>Growth Drivers:</strong> ${company.Growth_Drivers ? company.Growth_Drivers.substring(0, 150) + '...' : 'N/A'}
+                                 </small>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             `;
+                 } catch (error) {
+                     console.error('Error rendering company card:', error, company);
+                     return `<div class="col-12 text-center text-danger">Error loading company data</div>`;
+                 }
+             }).join('');
+
+             container.innerHTML = cardsHTML;
+         }
+
+        // Get performance badge class
+        function getPerformanceBadgeClass(score) {
+            if (score >= 80) return 'success';
+            if (score >= 60) return 'primary';
+            if (score >= 40) return 'warning';
+            if (score >= 20) return 'info';
+            return 'danger';
+        }
+
+        // Update company count
+        function updateCompanyCount() {
+            const countElement = document.getElementById('companyCount');
+            countElement.textContent = `${filteredCompanies.length} companies`;
+        }
+
+        // Select company
+        function selectCompany(companyName) {
+            selectedCompany = companyName;
+            // Highlight selected company card
+            document.querySelectorAll('.company-card').forEach(card => {
+                card.classList.remove('border-primary');
+            });
+            event.currentTarget.classList.add('border-primary');
+        }
+
+        // View company news
+
+        // Display news panel
+        function displayNewsPanel(news, companyName) {
+            const panel = document.getElementById('newsPanel');
+            
+            if (!news || news.length === 0) {
+                panel.innerHTML = `
+                    <div class="text-center text-muted">
+                        <p>No news found for ${companyName}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const newsHTML = news.map(article => `
+                <div class="news-item mb-3 p-2 border rounded">
+                    <h6 class="news-title">${article.title}</h6>
+                    <p class="news-description small text-muted">${article.description}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-newspaper"></i> ${article.source}
+                            <span class="badge badge-${getSentimentBadgeClass(article.sentiment)} ml-1">${article.sentiment}</span>
+                        </small>
+                        <a href="${article.link}" target="_blank" class="btn btn-sm btn-outline-primary">Read</a>
+                    </div>
+                </div>
+            `).join('');
+
+            panel.innerHTML = `
+                <h6>Latest News for: ${companyName}</h6>
+                ${newsHTML}
+            `;
+        }
+
+        // Get sentiment badge class
+        function getSentimentBadgeClass(sentiment) {
+            const classMap = {
+                'positive': 'success',
+                'neutral': 'secondary',
+                'negative': 'danger'
+            };
+            return classMap[sentiment] || 'secondary';
+        }
+
+        // Filter news by type
+        function filterNews(type) {
+            currentNewsType = type;
+            
+            // Update button states
+            document.querySelectorAll('.btn-group .btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+        }
+
+        // Analyze company
+        async function analyzeCompany(companyName) {
+            try {
+                const response = await fetch('/api/dashboard/company-analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        company_name: companyName
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showCompanyAnalysisModal(result.analysis, companyName);
+                } else {
+                    showStatus(`Error analyzing company: ${result.error}`, 'danger');
+                }
+            } catch (error) {
+                showStatus(`Error analyzing company: ${error.message}`, 'danger');
+            }
+        }
+
+        // Show company analysis modal
+        function showCompanyAnalysisModal(analysis, companyName) {
+            // Create modal dynamically
+            const modalHTML = `
+                <div class="modal fade" id="analysisModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Analysis: ${companyName}</h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Financial Analysis</h6>
+                                        <div class="analysis-section">
+                                            ${analysis.financial ? JSON.stringify(analysis.financial, null, 2) : 'No financial data available'}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Growth Recommendations</h6>
+                                        <div class="analysis-section">
+                                            ${analysis.growth ? JSON.stringify(analysis.growth, null, 2) : 'No growth data available'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('analysisModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Show modal
+            $('#analysisModal').modal('show');
+        }
+
+        // Show add company modal
+        function showAddCompanyModal() {
+            $('#addCompanyModal').modal('show');
+        }
+
+        // Add new company
+        async function addNewCompany() {
+            const form = document.getElementById('addCompanyForm');
+            const formData = new FormData(form);
+            
+            const companyData = {
+                Company_Name: document.getElementById('companyName').value,
+                Sector: document.getElementById('companySector').value,
+                Location: document.getElementById('companyLocation').value,
+                Founded_Year: parseInt(document.getElementById('companyFounded').value) || null,
+                Employee_Count: parseInt(document.getElementById('companyEmployees').value) || null,
+                Primary_Products: document.getElementById('companyProducts').value,
+                Export_Markets: document.getElementById('companyExport').value,
+                Website: document.getElementById('companyWebsite').value,
+                Email: document.getElementById('companyEmail').value,
+                Phone: document.getElementById('companyPhone').value,
+                Total_Revenue: parseFloat(document.getElementById('companyRevenue').value) || null,
+                Gross_Profit_Margin: document.getElementById('companyGrossMargin').value,
+                Net_Profit_Margin: document.getElementById('companyNetMargin').value,
+                Debt_to_Equity: parseFloat(document.getElementById('companyDebtEquity').value) || null,
+                Overall_Performance_Score: document.getElementById('companyPerformance').value,
+                Growth_Drivers: document.getElementById('companyGrowth').value
+            };
+
+            try {
+                const response = await fetch('/api/dashboard/add-company', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(companyData)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatus('Company added successfully!', 'success');
+                    $('#addCompanyModal').modal('hide');
+                    form.reset();
+                    // Reload companies
+                    await loadCompanies();
+                } else {
+                    showStatus(`Error adding company: ${result.error}`, 'danger');
+                }
+            } catch (error) {
+                showStatus(`Error adding company: ${error.message}`, 'danger');
+            }
+        }
+
+        // Display news articles
+        function displayNews(articles) {
+            const newsResults = document.getElementById('newsResults');
+            
+            if (!articles || articles.length === 0) {
+                newsResults.innerHTML = '<div class="col-12 text-center text-muted"><p>No news articles found</p></div>';
+                return;
+            }
+            
+            const newsHTML = articles.map(article => {
+                const description = article.description || 'No description available';
+                const truncatedDescription = description.length > 120 ? description.substring(0, 120) + '...' : description;
+                const title = article.title || 'No Title';
+                const truncatedTitle = title.length > 60 ? title.substring(0, 60) + '...' : title;
+                
+                return `
+                <div class="col-md-6 mb-3">
+                    <div class="card news-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="card-title">${truncatedTitle}</h6>
+                                <span class="similarity-score">${Math.round((article.similarity || 0) * 100)}%</span>
+                            </div>
+                            <p class="card-text text-muted small">${truncatedDescription}</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-newspaper"></i> <strong>Source:</strong> ${article.source || 'Unknown Source'}
+                                    </small>
+                                    ${article.pubDate ? `<br><small class="text-muted"><i class="fas fa-calendar"></i> ${new Date(article.pubDate).toLocaleDateString()}</small>` : ''}
+                                </div>
+                                <a href="${article.link || '#'}" target="_blank" class="btn btn-sm btn-outline-primary" ${!article.link ? 'disabled' : ''}>
+                                    <i class="fas fa-external-link-alt"></i> Read
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+            
+            newsResults.innerHTML = newsHTML;
+        }
+
+        // Display companies
+        function displayCompanies(companies) {
+            const companyResults = document.getElementById('companyResults');
+            
+            if (!companies || companies.length === 0) {
+                companyResults.innerHTML = '<div class="col-12 text-center text-muted"><p>No companies found</p></div>';
+                return;
+            }
+            
+            const companyHTML = companies.map(company => `
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="card-title">${company.name}</h6>
+                                <span class="similarity-score">${Math.round(company.similarity * 100)}%</span>
+                            </div>
+                            <p class="card-text">
+                                <strong>Sector:</strong> ${company.sector}<br>
+                                <strong>Location:</strong> ${company.location}<br>
+                                <strong>Products:</strong> ${company.products}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            companyResults.innerHTML = companyHTML;
+        }
+
+        // Update dashboard
+        async function updateDashboard() {
+            if (!lastDashboardData) return;
+            
+            try {
+                const response = await fetch('/api/dashboard', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ dashboard_data: lastDashboardData })
+                });
+                
+                const charts = await response.json();
+                
+                // Render charts
+                if (charts.news_sources) {
+                    Plotly.newPlot('newsSourcesChart', JSON.parse(charts.news_sources).data, JSON.parse(charts.news_sources).layout);
+                }
+                
+                if (charts.news_categories) {
+                    Plotly.newPlot('newsCategoriesChart', JSON.parse(charts.news_categories).data, JSON.parse(charts.news_categories).layout);
+                }
+                
+                if (charts.company_sectors) {
+                    Plotly.newPlot('companySectorsChart', JSON.parse(charts.company_sectors).data, JSON.parse(charts.company_sectors).layout);
+                }
+                
+                if (charts.company_locations) {
+                    Plotly.newPlot('companyLocationsChart', JSON.parse(charts.company_locations).data, JSON.parse(charts.company_locations).layout);
+                }
+                
+            } catch (error) {
+                console.error('Error updating dashboard:', error);
+            }
+        }
+
+        // Refresh dashboard
+        function refreshDashboard() {
+            updateDashboard();
+            showStatus('Dashboard refreshed', 'success');
+        }
+
+        // Clear duplicate news articles
+        async function clearDuplicates() {
+            showStatus('Clearing duplicate articles...', 'info');
+            try {
+                const response = await fetch('/api/clear-duplicates', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    showStatus(result.message, 'success');
+                    // Refresh the news display
+                    await displayLatestNews();
+                } else {
+                    showStatus(`Error: ${result.error}`, 'danger');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'danger');
+            }
+        }
+
+        // Load latest news independently
+        async function loadLatestNews() {
+            showStatus('Loading latest news...', 'info');
+            try {
+                const response = await fetch('/api/latest-news', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                if (result.success && result.articles && result.articles.length > 0) {
+                    displayNews(result.articles);
+                    showStatus(`Loaded ${result.articles.length} news articles`, 'success');
+                } else {
+                    const newsResults = document.getElementById('newsResults');
+                    newsResults.innerHTML = '<div class="col-12 text-center text-muted"><p>No news articles found. Try fetching news first.</p></div>';
+                    showStatus('No news articles available', 'warning');
+                }
+            } catch (error) {
+                console.error('Error loading latest news:', error);
+                const newsResults = document.getElementById('newsResults');
+                newsResults.innerHTML = '<div class="col-12 text-center text-muted"><p>Error loading news articles.</p></div>';
+                showStatus('Error loading news', 'danger');
+            }
+        }
+
+        // Generate comprehensive dashboard with multiple charts
+        async function generateDashboard() {
+            showStatus('Loading financial data and generating dashboard...', 'info');
+            try {
+                // First, ensure all datasets are loaded
+                const loadDataResponse = await fetch('/api/load-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const loadDataResult = await loadDataResponse.json();
+                if (!loadDataResult.success) {
+                    showStatus('Failed to load datasets: ' + loadDataResult.error, 'danger');
+                    return;
+                }
+                
+                // Get company data
+                const companiesResponse = await fetch('/api/dashboard/companies');
+                const companies = await companiesResponse.json();
+                
+                if (companies && companies.length > 0) {
+                    // Process financial data
+                    const financialData = companies.map(company => ({
+                        name: company.Company_Name,
+                        sector: company.Sector || 'Unknown',
+                        revenue: parseFloat(company.Total_Revenue) || 0,
+                        netMargin: parseFloat(company.Net_Profit_Margin) || 0,
+                        debtEquity: parseFloat(company.Debt_to_Equity) || 0,
+                        operatingProfit: parseFloat(company.Operating_Profit) || 0
+                    }));
+                    
+                    // Generate the 4 financial charts
+                    generateRevenueChart(financialData);
+                    generateProfitMarginChart(financialData);
+                    generateDebtEquityChart(financialData);
+                    generateOperatingProfitChart(financialData);
+                    
+                    showStatus('Financial dashboard generated successfully', 'success');
+                } else {
+                    showStatus('No company data available for dashboard. Please load data first.', 'warning');
+                }
+            } catch (error) {
+                console.error('Error generating dashboard:', error);
+                showStatus('Error generating dashboard: ' + error.message, 'danger');
+            }
+        }
+
+        // Generate Revenue Chart
+        function generateRevenueChart(financialData) {
+            const sectorRevenue = {};
+            financialData.forEach(company => {
+                const sector = company.sector;
+                sectorRevenue[sector] = (sectorRevenue[sector] || 0) + company.revenue;
+            });
+
+            const trace = {
+                type: 'pie',
+                labels: Object.keys(sectorRevenue),
+                values: Object.values(sectorRevenue),
+                textinfo: 'label+percent',
+                textposition: 'outside',
+                marker: {
+                    colors: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                }
+            };
+
+            const layout = {
+                title: 'Revenue Distribution by Sector',
+                margin: { t: 50, b: 0, l: 0, r: 0 },
+                height: 400
+            };
+
+            Plotly.newPlot('revenueChart', [trace], layout);
+        }
+
+        // Generate Profit Margin Chart
+        function generateProfitMarginChart(financialData) {
+            const trace = {
+                x: financialData.map(company => company.name),
+                y: financialData.map(company => company.netMargin),
+                type: 'bar',
+                marker: {
+                    color: financialData.map(company => company.netMargin > 0 ? '#2ECC71' : '#E74C3C')
+                }
+            };
+
+            const layout = {
+                title: 'Net Profit Margin by Company',
+                xaxis: { title: 'Companies' },
+                yaxis: { title: 'Net Profit Margin (%)' },
+                margin: { t: 50, b: 100, l: 50, r: 50 },
+                height: 400
+            };
+
+            Plotly.newPlot('profitMarginChart', [trace], layout);
+        }
+
+        // Generate Debt-to-Equity Chart
+        function generateDebtEquityChart(financialData) {
+            const trace = {
+                x: financialData.map(company => company.name),
+                y: financialData.map(company => company.debtEquity),
+                type: 'scatter',
+                mode: 'markers',
+                marker: {
+                    size: 10,
+                    color: financialData.map(company => company.debtEquity > 1 ? '#E74C3C' : '#2ECC71')
+                }
+            };
+
+            const layout = {
+                title: 'Debt-to-Equity Ratio by Company',
+                xaxis: { title: 'Companies' },
+                yaxis: { title: 'Debt-to-Equity Ratio' },
+                margin: { t: 50, b: 100, l: 50, r: 50 },
+                height: 400
+            };
+
+            Plotly.newPlot('debtEquityChart', [trace], layout);
+        }
+
+        // Generate Operating Profit Chart
+        function generateOperatingProfitChart(financialData) {
+            const trace = {
+                x: financialData.map(company => company.name),
+                y: financialData.map(company => company.operatingProfit),
+                type: 'bar',
+                marker: {
+                    color: '#3498DB'
+                }
+            };
+
+            const layout = {
+                title: 'Operating Profit by Company',
+                xaxis: { title: 'Companies' },
+                yaxis: { title: 'Operating Profit (Cr)' },
+                margin: { t: 50, b: 100, l: 50, r: 50 },
+                height: 400
+            };
+
+            Plotly.newPlot('operatingProfitChart', [trace], layout);
+        }
+
+
+
+        // Show empty charts when no data is available
+        function showEmptyCharts() {
+            const chartContainers = [
+                'revenueChart', 'profitMarginChart', 'debtEquityChart', 'operatingProfitChart'
+            ];
+            
+            chartContainers.forEach(containerId => {
+                const container = document.getElementById(containerId);
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center text-muted">
+                            <i class="fas fa-chart-bar fa-2x mb-2"></i>
+                            <p>No data available</p>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        // Event listeners
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            showStatus('MSME Dashboard loaded successfully', 'success');
+            // Auto-load dashboard data
+            loadDashboardData();
+        });
+    </script>
+</body>
+</html>
