@@ -1,0 +1,47 @@
+# Enhanced Requirements for PraisonAI Integration
+# Updated requirements.txt for Python 3.12 compatibility with PraisonAI
+
+# Core Flask dependencies
+flask==3.0.0
+flask-cors==4.0.0
+
+# Database dependencies
+pymongo==4.8.0
+pandas==2.1.4
+
+# AI and ML dependencies
+sentence-transformers==3.0.1
+numpy==1.26.2
+scikit-learn==1.3.2
+
+# PraisonAI dependencies
+praisonaiagents>=0.0.162
+openai>=1.0.0
+
+# Data processing and visualization
+requests==2.31.0
+plotly==5.17.0
+
+# Environment and utilities
+python-dotenv==1.0.0
+setuptools==69.0.0
+
+# Additional AI/ML libraries for enhanced features
+transformers>=4.30.0
+torch>=2.0.0
+langchain>=0.1.0
+langchain-openai>=0.1.0
+
+# Financial and Search API tools
+yfinance>=0.2.40
+alpha-vantage>=2.3.1
+duckduckgo-search>=6.0.0
+
+# Optional: For advanced text processing
+spacy>=3.6.0
+nltk>=3.8.0
+
+# Optional: For enhanced data analysis
+matplotlib>=3.7.0
+seaborn>=0.12.0
+scipy>=1.11.0
